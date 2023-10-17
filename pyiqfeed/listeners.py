@@ -473,6 +473,7 @@ class VerboseQuoteListener(VerboseIQFeedListener):
 
     def __init__(self, name: str, file):
         super().__init__(name)
+        self.file = file
 
     def process_invalid_symbol(self, bad_symbol: str) -> None:
         print("%s: Invalid Symbol: %s" % (self._name, bad_symbol))
@@ -485,26 +486,26 @@ class VerboseQuoteListener(VerboseIQFeedListener):
         print("%s: Regional Quote:" % self._name)
         print(quote)
 
-    def process_summary(self, summary: np.array, file) -> None:
+    def process_summary(self, summary: np.array) -> None:
         # my
         print(f"{self._name}: Data Summary")
-        file.write(f"{self._name}: Data Summary \n")
+        self.file.write(f"{self._name}: Data Summary \n")
         print(summary)
-        file.write(summary)
+        self.file.write(summary)
 
-    def process_update(self, update: np.array, file) -> None:
+    def process_update(self, update: np.array) -> None:
         # my
         print(f"{self._name}: Data Update")
-        file.write(f"{self._name}: Data Summary \n")
+        self.file.write(f"{self._name}: Data Summary \n")
         print(update)
-        file.write(update)
+        self.file.write(update)
 
-    def process_fundamentals(self, fund: np.array, file) -> None:
+    def process_fundamentals(self, fund: np.array) -> None:
         # my
         print(f"{self._name}: Fundamentals Received")
-        file.write(f"{self._name}: Data Summary \n")
+        self.file.write(f"{self._name}: Data Summary \n")
         print(fund)
-        file.write(fund)
+        self.file.write(fund)
 
     def process_auth_key(self, key: str) -> None:
         print("%s: Authorization Key Received: %s" % (self._name, key))
