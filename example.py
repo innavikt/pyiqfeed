@@ -431,3 +431,5 @@ if __name__ == "__main__":
             # get_futures_options_chain("@VX")
         if results.news:
             get_news()
+    my_file.close()
+
