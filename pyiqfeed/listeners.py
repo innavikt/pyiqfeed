@@ -491,21 +491,21 @@ class VerboseQuoteListener(VerboseIQFeedListener):
         print(f"{self._name}: Data Summary")
         self.file.write(f"{self._name}: Data Summary \n")
         print(summary)
-        self.file.write(summary)
+        self.file.write(str(summary))
 
     def process_update(self, update: np.array) -> None:
         # my
         print(f"{self._name}: Data Update")
         self.file.write(f"{self._name}: Data Summary \n")
         print(update)
-        self.file.write(update)
+        self.file.write(str(update))
 
     def process_fundamentals(self, fund: np.array) -> None:
         # my
         print(f"{self._name}: Fundamentals Received")
         self.file.write(f"{self._name}: Data Summary \n")
         print(fund)
-        self.file.write(fund)
+        self.file.write(str(fund))
 
     def process_auth_key(self, key: str) -> None:
         print("%s: Authorization Key Received: %s" % (self._name, key))
