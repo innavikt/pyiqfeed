@@ -1,4 +1,5 @@
 # coding=utf-8
+import time
 
 """
 Listener classes to listen to messages from IQFeed.
@@ -489,19 +490,31 @@ class VerboseQuoteListener(VerboseIQFeedListener):
     def process_summary(self, summary: np.array) -> None:
         # my
         print(f"{self._name}: Data Summary")
-        self.file.write(f"{self._name}: Data Summary, {','.join(map(str, summary))}\n")
+        # self.file.write(f"{self._name}: Data Summary, {','.join(map(str, summary))}\n")
         print(summary)
 
     def process_update(self, update: np.array) -> None:
-        # my
+        # real need
         print(f"{self._name}: Data Update")
-        self.file.write(f"{self._name}: Data Update,{','.join(map(str, update))}\n")
+        new_lst = []
+        for i, el in enumerate(update):
+            print(el)
+            el = el.decode()
+            try:
+                el = eval(el)
+            except (NameError, SyntaxError):
+                pass
+            if i == 3:
+                el = time.strftime('%H:%M:%S', time.gmtime(el / 1000000))
+            new_lst.append(el)
+        new_lst = ','.join(map(str, new_lst))
+        self.file.write(f"{self._name}: Data Update,{new_lst}\n")
         print(update)
 
     def process_fundamentals(self, fund: np.array) -> None:
         # my
         print(f"{self._name}: Fundamentals Received")
-        self.file.write(f"{self._name}: Fundamentals Received,{','.join(map(str, fund))}\n")
+        # self.file.write(f"{self._name}: Fundamentals Received,{','.join(map(str, fund))}\n")
         print(fund)
 
     def process_auth_key(self, key: str) -> None:
