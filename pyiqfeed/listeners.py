@@ -475,6 +475,7 @@ class VerboseQuoteListener(VerboseIQFeedListener):
     def __init__(self, name: str, file, producer):
         super().__init__(name)
         self.file = file
+        self.producer = producer
 
     def process_invalid_symbol(self, bad_symbol: str) -> None:
         print("%s: Invalid Symbol: %s" % (self._name, bad_symbol))
@@ -496,22 +497,23 @@ class VerboseQuoteListener(VerboseIQFeedListener):
     def process_update(self, update: np.array) -> None:
         # real need
         print(f"{self._name}: Data Update")
-        new_lst = []
-        for i, el in enumerate(update):
-            print(el)
-            el = el.decode()
-            try:
-                el = eval(el)
-            except (NameError, SyntaxError):
-                pass
-            if i == 3:
-                el = time.strftime('%H:%M:%S', time.gmtime(el / 1000000))
-            new_lst.append(el)
-        ticker = new_lst[0]
-        new_lst = ','.join(map(str, new_lst))
-        # self.file.write(f"{self._name}: Data Update,{new_lst}\n")
-        producer.send(ticker, value=new_lst)
-        print(update)
+
+        for upd in update:
+            new_lst = []
+            for i, el in enumerate(upd):
+                print(el, type(el))
+                try:
+                    el = el.decode('utf-8')
+                except AttributeError:
+                    pass
+                if i == 3:
+                    el = time.strftime('%H:%M:%S', time.gmtime(el / 1000000))
+                new_lst.append(el)
+            ticker = new_lst[0]
+            new_lst = ','.join(map(str, new_lst))
+            # print(new_lst)
+            # self.file.write(f"{self._name}: Data Update,{new_lst}\n")
+            self.producer.send(ticker, value=new_lst)
 
     def process_fundamentals(self, fund: np.array) -> None:
         # my
