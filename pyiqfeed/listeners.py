@@ -472,7 +472,7 @@ class VerboseQuoteListener(VerboseIQFeedListener):
 
     """
 
-    def __init__(self, name: str, file):
+    def __init__(self, name: str, file, producer):
         super().__init__(name)
         self.file = file
 
@@ -507,8 +507,10 @@ class VerboseQuoteListener(VerboseIQFeedListener):
             if i == 3:
                 el = time.strftime('%H:%M:%S', time.gmtime(el / 1000000))
             new_lst.append(el)
+        ticker = new_lst[0]
         new_lst = ','.join(map(str, new_lst))
-        self.file.write(f"{self._name}: Data Update,{new_lst}\n")
+        # self.file.write(f"{self._name}: Data Update,{new_lst}\n")
+        producer.send(ticker, value=new_lst)
         print(update)
 
     def process_fundamentals(self, fund: np.array) -> None:
