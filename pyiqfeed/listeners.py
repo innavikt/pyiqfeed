@@ -506,14 +506,14 @@ class VerboseQuoteListener(VerboseIQFeedListener):
                     el = el.decode('utf-8')
                 except AttributeError:
                     pass
-                if i == 3:
-                    el = time.strftime('%H:%M:%S', time.gmtime(el / 1000000))
+                # if i == 3:
+                #     el = time.strftime('%H:%M:%S', time.gmtime(el / 1000000))
                 new_lst.append(el)
-            ticker = new_lst[0]
+            # ticker = new_lst[0]
             new_lst = ','.join(map(str, new_lst))
             # print(new_lst)
-            # self.file.write(f"{self._name}: Data Update,{new_lst}\n")
-            self.producer.send(ticker, value=new_lst)
+            self.file.write(f"{new_lst}\n")
+            # self.producer.send(ticker, value=new_lst)
 
     def process_fundamentals(self, fund: np.array) -> None:
         # my

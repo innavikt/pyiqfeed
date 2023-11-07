@@ -16,6 +16,7 @@ import time
 from localconfig.passwords import dtn_product_id, dtn_login, dtn_password
 from kafka import KafkaProducer
 from json import dumps
+import os
 
 
 def launch_service():
@@ -405,40 +406,45 @@ if __name__ == "__main__":
 
     test_ticker = results.ticker
 
-    host = '54.221.83.80'
-    port = '9095'
-    my_producer = KafkaProducer(value_serializer=lambda m: dumps(m).encode('utf-8'), bootstrap_servers=[f'{host}:{port}'])
+    # host = '54.221.83.80'
+    # port = '9095'
+    # my_producer = KafkaProducer(value_serializer=lambda m: dumps(m).encode('utf-8'), bootstrap_servers=[f'{host}:{port}'])
+    my_producer = 'a'
 
-    # future = producer.send(test_ticker, value=message)
-    my_file = open(f"{test_ticker}_test.txt", "w")
-    if results.level_1:
-        get_level_1_quotes_and_trades(ticker=test_ticker, seconds=30)
-    if results.regional_quotes:
-        get_regional_quotes(ticker=test_ticker, seconds=120)
-    if results.trade_updates:
-        get_trades_only(ticker=test_ticker, seconds=30, file=my_file, producer=my_producer)
-    if results.interval_data:
-        get_live_interval_bars(ticker=test_ticker, bar_len=5, seconds=30)
-    if results.admin_socket:
-        get_administrative_messages(seconds=30)
-    if results.historical_tickdata:
-        get_tickdata(ticker=test_ticker, max_ticks=100, num_days=4)
-    if results.historical_bars:
-        get_historical_bar_data(ticker=test_ticker,
-                                bar_len=60,
-                                bar_unit='s',
-                                num_bars=100)
-    if results.historical_daily_data:
-        get_daily_data(ticker=test_ticker, num_days=10)
-    if results.reference_data:
-        get_reference_data()
-    if results.lookups_and_chains:
-        get_ticker_lookups(test_ticker)
-        get_equity_option_chain(test_ticker)
-        get_futures_chain("@VX")
-        get_futures_spread_chain("@VX")
-        # get_futures_options_chain("@VX")
-    if results.news:
-        get_news()
-    # my_file.close()
+    i = 0
 
+    while i <= 450:
+        # future = producer.send(test_ticker, value=message)
+        os.makedirs(f"trades/{test_ticker}", exist_ok=True)
+        my_file = open(f"{test_ticker}_{i}.txt", "w")
+        if results.level_1:
+            get_level_1_quotes_and_trades(ticker=test_ticker, seconds=30)
+        if results.regional_quotes:
+            get_regional_quotes(ticker=test_ticker, seconds=120)
+        if results.trade_updates:
+            get_trades_only(ticker=test_ticker, seconds=60, file=my_file, producer=my_producer)
+        if results.interval_data:
+            get_live_interval_bars(ticker=test_ticker, bar_len=5, seconds=30)
+        if results.admin_socket:
+            get_administrative_messages(seconds=30)
+        if results.historical_tickdata:
+            get_tickdata(ticker=test_ticker, max_ticks=100, num_days=4)
+        if results.historical_bars:
+            get_historical_bar_data(ticker=test_ticker,
+                                    bar_len=60,
+                                    bar_unit='s',
+                                    num_bars=100)
+        if results.historical_daily_data:
+            get_daily_data(ticker=test_ticker, num_days=10)
+        if results.reference_data:
+            get_reference_data()
+        if results.lookups_and_chains:
+            get_ticker_lookups(test_ticker)
+            get_equity_option_chain(test_ticker)
+            get_futures_chain("@VX")
+            get_futures_spread_chain("@VX")
+            # get_futures_options_chain("@VX")
+        if results.news:
+            get_news()
+        my_file.close()
+        i += 1
