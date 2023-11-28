@@ -415,8 +415,8 @@ if __name__ == "__main__":
 
     while i <= 450:
         # future = producer.send(test_ticker, value=message)
-        os.makedirs(f"trades/{test_ticker}", exist_ok=True)
-        my_file = open(f"{test_ticker}_{i}.txt", "w")
+        os.makedirs(f"../IQFeedConnector/tmp/trades/{test_ticker}", exist_ok=True)
+        my_file = open(f"../IQFeedConnector/tmp/trades/{test_ticker}/{test_ticker}_{i}.txt", "w")
         if results.level_1:
             get_level_1_quotes_and_trades(ticker=test_ticker, seconds=30)
         if results.regional_quotes:
@@ -448,3 +448,13 @@ if __name__ == "__main__":
             get_news()
         my_file.close()
         i += 1
+        print(f"""
+        ---
+        ---
+        ---
+        ---
+        {i}
+        ---
+        ---
+        ---
+        ---""")

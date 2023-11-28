@@ -501,7 +501,7 @@ class VerboseQuoteListener(VerboseIQFeedListener):
         for upd in update:
             new_lst = []
             for i, el in enumerate(upd):
-                print(el, type(el))
+                # print(el, type(el))
                 try:
                     el = el.decode('utf-8')
                 except AttributeError:
@@ -511,7 +511,7 @@ class VerboseQuoteListener(VerboseIQFeedListener):
                 new_lst.append(el)
             # ticker = new_lst[0]
             new_lst = ','.join(map(str, new_lst))
-            # print(new_lst)
+            print(new_lst)
             self.file.write(f"{new_lst}\n")
             # self.producer.send(ticker, value=new_lst)
 
