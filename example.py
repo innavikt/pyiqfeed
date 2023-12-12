@@ -63,7 +63,7 @@ def get_regional_quotes(ticker: str, seconds: int):
         quote_conn.regional_unwatch(ticker)
 
 
-def get_trades_only(ticker: str, seconds: int, file, producer):
+def get_trades_only(ticker_lst: list, seconds: int, file, producer):
     """Get level 1 quotes and trades for ticker for seconds seconds."""
 
     quote_conn = iq.QuoteConn(name="pyiqfeed-Example-trades-only")
@@ -71,9 +71,11 @@ def get_trades_only(ticker: str, seconds: int, file, producer):
     quote_conn.add_listener(quote_listener)
 
     with iq.ConnConnector([quote_conn]) as connector:
-        quote_conn.trades_watch(ticker)
+        for ticker in ticker_lst:
+            quote_conn.trades_watch(ticker)
         time.sleep(seconds)
-        quote_conn.unwatch(ticker)
+        for ticker in ticker_lst:
+            quote_conn.unwatch(ticker)
 
 
 def get_live_interval_bars(ticker: str, bar_len: int, seconds: int):
@@ -405,6 +407,7 @@ if __name__ == "__main__":
     launch_service()
 
     test_ticker = results.ticker
+    test_ticker_lst = ['GPS', 'UAA']
 
     # host = '54.221.83.80'
     # port = '9095'
@@ -422,7 +425,7 @@ if __name__ == "__main__":
         if results.regional_quotes:
             get_regional_quotes(ticker=test_ticker, seconds=120)
         if results.trade_updates:
-            get_trades_only(ticker=test_ticker, seconds=60, file=my_file, producer=my_producer)
+            get_trades_only(ticker_lst=test_ticker_lst, seconds=60, file=my_file, producer=my_producer)
         if results.interval_data:
             get_live_interval_bars(ticker=test_ticker, bar_len=5, seconds=30)
         if results.admin_socket:
