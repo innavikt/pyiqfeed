@@ -406,8 +406,14 @@ if __name__ == "__main__":
 
     launch_service()
 
-    test_ticker = results.ticker
-    test_ticker_lst = ['GPS', 'UAA']
+    t = results.ticker
+    if t == 'SP500':
+        # читаем список символов из файла
+        f = open('tickersSP500.txt', 'r')
+        test_ticker_lst = f.readlines()[0].split(',')
+    else:
+        test_ticker_lst = t.split()
+    # print('Loading Tickers:', t)
 
     # host = '54.221.83.80'
     # port = '9095'
@@ -418,46 +424,46 @@ if __name__ == "__main__":
 
     while i <= 450:
         # future = producer.send(test_ticker, value=message)
-        os.makedirs(f"../IQFeedConnector/tmp/trades/{test_ticker}", exist_ok=True)
-        my_file = open(f"../IQFeedConnector/tmp/trades/{test_ticker}/{test_ticker}_{i}.txt", "w")
-        if results.level_1:
-            get_level_1_quotes_and_trades(ticker=test_ticker, seconds=30)
-        if results.regional_quotes:
-            get_regional_quotes(ticker=test_ticker, seconds=120)
+        os.makedirs(f"../IQFeedConnector/tmp/trades/{t}", exist_ok=True)
+        my_file = open(f"../IQFeedConnector/tmp/trades/{t}/{t}_{i}.txt", "w")
+        # if results.level_1:
+        #     get_level_1_quotes_and_trades(ticker=test_ticker, seconds=30)
+        # if results.regional_quotes:
+        #     get_regional_quotes(ticker=test_ticker, seconds=120)
         if results.trade_updates:
             get_trades_only(ticker_lst=test_ticker_lst, seconds=60, file=my_file, producer=my_producer)
-        if results.interval_data:
-            get_live_interval_bars(ticker=test_ticker, bar_len=5, seconds=30)
-        if results.admin_socket:
-            get_administrative_messages(seconds=30)
-        if results.historical_tickdata:
-            get_tickdata(ticker=test_ticker, max_ticks=100, num_days=4)
-        if results.historical_bars:
-            get_historical_bar_data(ticker=test_ticker,
-                                    bar_len=60,
-                                    bar_unit='s',
-                                    num_bars=100)
-        if results.historical_daily_data:
-            get_daily_data(ticker=test_ticker, num_days=10)
-        if results.reference_data:
-            get_reference_data()
-        if results.lookups_and_chains:
-            get_ticker_lookups(test_ticker)
-            get_equity_option_chain(test_ticker)
-            get_futures_chain("@VX")
-            get_futures_spread_chain("@VX")
-            # get_futures_options_chain("@VX")
-        if results.news:
-            get_news()
+        # if results.interval_data:
+        #     get_live_interval_bars(ticker=test_ticker, bar_len=5, seconds=30)
+        # if results.admin_socket:
+        #     get_administrative_messages(seconds=30)
+        # if results.historical_tickdata:
+        #     get_tickdata(ticker=test_ticker, max_ticks=100, num_days=4)
+        # if results.historical_bars:
+        #     get_historical_bar_data(ticker=test_ticker,
+        #                             bar_len=60,
+        #                             bar_unit='s',
+        #                             num_bars=100)
+        # if results.historical_daily_data:
+        #     get_daily_data(ticker=test_ticker, num_days=10)
+        # if results.reference_data:
+        #     get_reference_data()
+        # if results.lookups_and_chains:
+        #     get_ticker_lookups(test_ticker)
+        #     get_equity_option_chain(test_ticker)
+        #     get_futures_chain("@VX")
+        #     get_futures_spread_chain("@VX")
+        #     # get_futures_options_chain("@VX")
+        # if results.news:
+        #     get_news()
         my_file.close()
         i += 1
-        print(f"""
-        ---
-        ---
-        ---
-        ---
-        {i}
-        ---
-        ---
-        ---
-        ---""")
+        # print(f"""
+        # ---
+        # ---
+        # ---
+        # ---
+        # {i}
+        # ---
+        # ---
+        # ---
+        # ---""")
