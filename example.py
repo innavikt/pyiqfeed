@@ -11,6 +11,7 @@ for more details.
 
 import argparse
 import datetime
+import pytz
 import pyiqfeed as iq
 import time
 from localconfig.passwords import dtn_product_id, dtn_login, dtn_password
@@ -422,10 +423,14 @@ if __name__ == "__main__":
 
     i = 0
 
+    download_dt = datetime.datetime.now(pytz.timezone('US/Eastern'))
+    download_dt_str = datetime.datetime.strftime(download_dt, '%Y%m%d')
+    print(download_dt_str)
+
     while i <= 450:
         # future = producer.send(test_ticker, value=message)
         os.makedirs(f"../IQFeedConnector/tmp/trades/txt", exist_ok=True)
-        my_file = open(f"../IQFeedConnector/tmp/trades/txt/{t}_{i}.txt", "w")
+        my_file = open(f"../IQFeedConnector/tmp/trades/txt/{t}_{i}_{download_dt_str}.txt", "w")
         # if results.level_1:
         #     get_level_1_quotes_and_trades(ticker=test_ticker, seconds=30)
         # if results.regional_quotes:
